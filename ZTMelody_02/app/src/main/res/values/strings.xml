@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyMelody_02</string>
+    <string name="title_home">Suggested</string>
+    <string name="title_dashboard">Songs</string>
+    <string name="title_notifications">Album</string>
+    <string name="title_artist">Artist</string>
+</resources>
