@@ -4,4 +4,10 @@
     <string name="title_dashboard">Songs</string>
     <string name="title_notifications">Album</string>
     <string name="title_artist">Artist</string>
+
+    <string name="rewind">Rebobinar</string>
+    <string name="previous">Pista anterior</string>
+    <string name="play_pause">Reproducir/Pausa</string>
+    <string name="next">Pista siguiente</string>
+    <string name="forward">Avanzar</string>
 </resources>

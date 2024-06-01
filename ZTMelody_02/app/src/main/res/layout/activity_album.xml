@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/colorPrimary"
+    >
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="300dp"
@@ -14,6 +16,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#240050">
+        android:background="@color/colorPrimary"
+        >
     </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
