@@ -1,1 +1,1 @@
-# Web_01
+    Antes de probar la aplicacion escanee las musicas con el boton de la primera pantalla
