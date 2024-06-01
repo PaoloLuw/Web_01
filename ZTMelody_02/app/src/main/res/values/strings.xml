@@ -10,4 +10,8 @@
     <string name="play_pause">Reproducir/Pausa</string>
     <string name="next">Pista siguiente</string>
     <string name="forward">Avanzar</string>
+
+
+    <string name="music_image">Music Image</string>
+    <string name="more_options">More Options</string>
 </resources>
