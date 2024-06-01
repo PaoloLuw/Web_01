@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:text="Nombre de la canción"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:fontFamily="@font/josefin_slab"
         app:layout_constraintTop_toBottomOf="@+id/timeTextView"
         app:layout_constraintStart_toStartOf="parent"

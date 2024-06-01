@@ -32,7 +32,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HELLO">
+                android:text="HELLO"
+                android:fontFamily="@font/josefin_slab"
+                >
             </TextView>
         </RelativeLayout>
 
