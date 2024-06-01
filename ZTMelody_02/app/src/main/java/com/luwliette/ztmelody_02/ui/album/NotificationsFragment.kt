@@ -1,4 +1,4 @@
-package com.luwliette.ztmelody_02.ui.notifications
+package com.luwliette.ztmelody_02.ui.album
 
 import android.content.Intent
 import android.os.Bundle

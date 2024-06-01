@@ -1,4 +1,4 @@
-package com.luwliette.ztmelody_02.ui.notifications
+package com.luwliette.ztmelody_02.ui.album
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
