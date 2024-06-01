@@ -16,7 +16,8 @@
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="1" />
+        app:layout_constraintDimensionRatio="1"
+        android:layout_margin="15dp"/>
 
     <SeekBar
         android:id="@+id/seekBar"
