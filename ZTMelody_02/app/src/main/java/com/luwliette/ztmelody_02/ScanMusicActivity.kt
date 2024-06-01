@@ -1,14 +1,17 @@
 package com.luwliette.ztmelody_02
-
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.luwliette.ztmelody_02.MainActivity
+import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.database.SongDatabase
 
 import com.luwliette.ztmelody_02.database.Song
@@ -17,6 +20,9 @@ class ScanMusicActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+
+        setContentView(R.layout.activity_scan_music)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
@@ -79,4 +85,9 @@ class ScanMusicActivity : AppCompatActivity() {
         }
     }
 
+    fun onNextButtonClick(view: View) {
+        // Aquí creas un Intent para iniciar la otra actividad
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
 }
