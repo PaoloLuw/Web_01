@@ -2,6 +2,7 @@ package com.luwliette.ztmelody_02.ui.notifications
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.luwliette.ztmelody_02.AlbumActivity
 import com.luwliette.ztmelody_02.CountryAdapterActivity_2
 import com.luwliette.ztmelody_02.CountryModelActivity
-import com.luwliette.ztmelody_02.MusicControlActivity
 import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.database.SongDatabase
-import com.luwliette.ztmelody_02.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
 
@@ -37,7 +36,7 @@ class NotificationsFragment : Fragment() {
         }
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(context, 3) // Configura GridLayoutManager
+        recyclerView.layoutManager = GridLayoutManager(context, 2) // Configura GridLayoutManager
 
         val songDatabase = SongDatabase(requireContext())
 
@@ -54,6 +53,8 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun openArtistDetailsActivity(artist: String) {
+        Log.d("CHECK", "Opening AlbumActivity with artist: $artist")
+
         val intent = Intent(requireContext(), AlbumActivity::class.java).apply {
             putExtra("ARTIST_NAME", artist)
         }

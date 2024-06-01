@@ -1,5 +1,6 @@
 package com.luwliette.ztmelody_02
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,9 +28,11 @@ class CountryAdapterActivity_2(
         holder.countryImage.setImageResource(country.countryImage)
 
         holder.itemView.setOnClickListener {
-            //openArtistDetailsActivity(country.countryName)
+            Log.d("ADAPTERM", "Clicked on item: ${country.countryName}")
+            openArtistDetailsActivity(country.countryName)
         }
     }
+
 
     override fun getItemCount(): Int {
         return countryList.size
