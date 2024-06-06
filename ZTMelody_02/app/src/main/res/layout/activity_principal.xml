@@ -85,7 +85,7 @@
         android:layout_width="200dp"
         android:layout_height="35dp"
         android:background="@drawable/rounder_button"
-        android:text="Hi Darling!"
+        android:text="Let's Start"
         android:textColor="@color/black"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
