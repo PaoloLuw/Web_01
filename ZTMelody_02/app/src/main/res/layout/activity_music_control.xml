@@ -11,7 +11,7 @@
         android:id="@+id/photoImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/fondo_img"
+        android:src="@drawable/icon_normal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toStartOf="parent"
