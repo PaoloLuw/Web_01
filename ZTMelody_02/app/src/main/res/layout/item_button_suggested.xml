@@ -25,7 +25,8 @@
         android:text="@string/item_name"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:ellipsize="end"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/DATE"
@@ -34,6 +35,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
         android:text="@string/item_date"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white"/>
 
 </LinearLayout>
