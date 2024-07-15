@@ -14,4 +14,12 @@
 
     <string name="music_image">Music Image</string>
     <string name="more_options">More Options</string>
+
+    <string name="item_image_desc">Item image desc</string>
+    <string name="item_name">Item name</string>
+    <string name="item_date">Item date</string>
+
+
+
+
 </resources>

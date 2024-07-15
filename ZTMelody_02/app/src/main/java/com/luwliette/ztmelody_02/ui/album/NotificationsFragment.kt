@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luwliette.ztmelody_02.AlbumActivity
-import com.luwliette.ztmelody_02.CountryAdapterActivity_2
-import com.luwliette.ztmelody_02.CountryModelActivity
+import com.luwliette.ztmelody_02.SongAdapterActivity_2
+import com.luwliette.ztmelody_02.SongModelActivity
 import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.database.SongDatabase
 
@@ -43,10 +43,10 @@ class NotificationsFragment : Fragment() {
         val artistList = songDatabase.getAllArtists()
 
         val countryList = artistList.map { artist ->
-            CountryModelActivity(artist, R.drawable.ic_music_list)
+            SongModelActivity(artist, R.drawable.ic_music_list)
         }
 
-        recyclerView.adapter = CountryAdapterActivity_2(countryList) { artistName ->
+        recyclerView.adapter = SongAdapterActivity_2(countryList) { artistName ->
             openArtistDetailsActivity(artistName)
         }
         return view

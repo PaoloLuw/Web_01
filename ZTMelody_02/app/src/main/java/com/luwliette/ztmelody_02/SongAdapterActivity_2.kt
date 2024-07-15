@@ -1,5 +1,6 @@
 package com.luwliette.ztmelody_02
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,13 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CountryAdapterActivity(
-    private val countryList: ArrayList<CountryModelActivity>,
-    private val songPaths: List<String>,
-    private val playSong: (List<String>, Int) -> Unit,
-    private val openSongDetailsActivity: () -> Unit,
-
-    ) : RecyclerView.Adapter<CountryAdapterActivity.ViewHolder>() {
+class SongAdapterActivity_2(
+    private val countryList: List<SongModelActivity>,
+    private val openArtistDetailsActivity: (String) -> Unit
+) : RecyclerView.Adapter<SongAdapterActivity_2.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val countryName: TextView = itemView.findViewById(R.id.country_name_tv)
@@ -21,17 +19,24 @@ class CountryAdapterActivity(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.custom_button_layout_2, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_button_album, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val country = countryList[position]
-        holder.countryName.text = country.countryName
+
+        val MAX_LENGTH = 20 // Definir la constante aquí
+        holder.countryName.text = if (country.countryName.length > MAX_LENGTH) {
+            "${country.countryName.substring(0, MAX_LENGTH)}..."
+        } else {
+            country.countryName
+        }
+
         holder.countryImage.setImageResource(country.countryImage)
 
         holder.itemView.setOnClickListener {
-            playSong(songPaths, position)
-            openSongDetailsActivity()
+            Log.d("ADAPTERM", "Clicked on item: ${country.countryName}")
+            openArtistDetailsActivity(country.countryName)
         }
     }
 

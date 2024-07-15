@@ -1,6 +1,6 @@
 package com.luwliette.ztmelody_02
 
-class CountryModelActivity (
+class SongModelActivity (
     val countryName : String,
     val countryImage : Int
 )

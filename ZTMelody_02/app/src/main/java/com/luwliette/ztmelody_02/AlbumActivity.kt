@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luwliette.ztmelody_02.database.SongDatabase
@@ -34,7 +33,7 @@ class AlbumActivity : AppCompatActivity() {
         val songDatabase = SongDatabase(this)
         val songList = songDatabase.getSongsByArtist(artistName)
         val songPaths = songList.map { it.data }
-        val countryList = ArrayList<CountryModelActivity>()
+        val countryList = ArrayList<SongModelActivity>()
 
 
         // Verificar si la lista de canciones está vacía o no
@@ -50,10 +49,10 @@ class AlbumActivity : AppCompatActivity() {
 
 
         songList.forEach { song ->
-            countryList.add(CountryModelActivity(song.title, R.drawable.ic_music_list))
+            countryList.add(SongModelActivity(song.title, R.drawable.ic_music_list))
         }
 
-        recyclerView.adapter = CountryAdapterActivity(countryList, songPaths, ::playSong, ::openSongDetailsActivity)
+        recyclerView.adapter = SongAdapterActivity(countryList, songPaths, ::playSong, ::openSongDetailsActivity)
     }
 
     private fun playSong(songPaths: List<String>, songIndex: Int) {

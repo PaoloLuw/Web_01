@@ -1,8 +1,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/COLOR_BASE_2"/> <!-- Color de fondo del botón -->
+    <solid android:color="@color/principalButton"/> <!-- Color de fondo del botón -->
     <stroke
         android:width="2dp"
-        android:color="@color/COLOR_BASE_2"/> <!-- Color y ancho del borde -->
+        android:color="@color/principalButton"/> <!-- Color y ancho del borde -->
     <corners android:radius="40dp"/> <!-- Radio de las esquinas -->
     <padding
         android:left="4dp"

@@ -7,7 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.luwliette.ztmelody_02.ui.pruebas.PruebaActivity
+
+import com.luwliette.ztmelody_02.ui.WelcomeActivity
 
 class PrincipalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,12 @@ class PrincipalActivity : AppCompatActivity() {
         val scanButton = findViewById<Button>(R.id.btnScanMusic)
         scanButton.setOnClickListener {
             val intent = Intent(this, ScanMusicActivity::class.java)
+            startActivity(intent)
+        }
+
+        val PRUEVA = findViewById<Button>(R.id.PRUEVAS)
+        PRUEVA.setOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
         }
     }

@@ -3,14 +3,14 @@
     <!-- Fondo negro -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary"/>
+            <solid android:color="@color/principalBackground"/>
         </shape>
     </item>
 
     <!-- Borde blanco en los lados y parte inferior -->
     <item android:top="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/COLOR_BASE_3"/>
+            <solid android:color="@color/principalBackground"/>
             <corners android:radius="4dp" />
         </shape>
     </item>
@@ -18,7 +18,7 @@
     <!-- Fondo negro interno para sobreponer al borde blanco en la parte superior -->
     <item android:left="1dp" android:right="1dp" android:bottom="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary"/>
+            <solid android:color="@color/principalBackground"/>
             <corners android:radius="4dp" />
         </shape>
     </item>

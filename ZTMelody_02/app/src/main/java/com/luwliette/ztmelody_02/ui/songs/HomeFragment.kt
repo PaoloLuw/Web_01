@@ -9,10 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.luwliette.ztmelody_02.CountryAdapterActivity
-import com.luwliette.ztmelody_02.CountryAdapterActivity_2
-import com.luwliette.ztmelody_02.CountryModelActivity
+import com.luwliette.ztmelody_02.SongAdapterActivity
+import com.luwliette.ztmelody_02.SongModelActivity
 import com.luwliette.ztmelody_02.MusicControlActivity
 import com.luwliette.ztmelody_02.MusicService
 import com.luwliette.ztmelody_02.R
@@ -35,23 +35,23 @@ class HomeFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         //recyclerView = view.findViewById(R.id.recyclerView)
         //recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 1) // Configura GridLayoutManager
+        //recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) // Configura LinearLayoutManager en horizontal
+
 
         val songDatabase = SongDatabase(requireContext())
         val songList = songDatabase.getAllSongs()
         val songPaths = songList.map { it.data }
 
-        val countryList = ArrayList<CountryModelActivity>()
+        val MusicList = ArrayList<SongModelActivity>()
 
         songList.forEach { song ->
-            countryList.add(CountryModelActivity(song.title, R.drawable.ic_music_list))
+            MusicList.add(SongModelActivity(song.title, R.drawable.icon_normal))
         }
-
-        recyclerView.adapter = CountryAdapterActivity(countryList, songPaths, ::playSong, ::openSongDetailsActivity)
+        recyclerView.adapter = SongAdapterActivity(MusicList, songPaths, ::playSong, ::openSongDetailsActivity)
 
         return view
     }

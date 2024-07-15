@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/principalBackground">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnNext"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:background="@color/COLOR_BASE_2"
+        android:background="@color/principalButton"
         android:onClick="onNextButtonClick"
         android:text="Go to PLayer"
         app:layout_constraintBottom_toBottomOf="parent"
