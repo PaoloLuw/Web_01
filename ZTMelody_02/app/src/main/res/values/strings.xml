@@ -19,7 +19,7 @@
     <string name="item_name">Item name</string>
     <string name="item_date">Item date</string>
 
-
-
+    <string name="web_client_id">37432480717-09l4g03qda3lhcdkavdr5tec3g296lp1.apps.googleusercontent.com</string>
+    <string name="android_client_id">37432480717-gsb674k28eocho880jmudk2sfb6v6bo7.apps.googleusercontent.com</string>
 
 </resources>

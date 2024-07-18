@@ -79,6 +79,7 @@ class MusicService : Service() {
 
     private fun playSong(songPath: String) {
         Log.d("ArtistFragment", "ENTRE A PLAYSONG:")
+        Log.d("ArtistFragmentpath", "Playing song from path: $songPath")
         try {
             mediaPlayer?.reset()
             mediaPlayer = MediaPlayer().apply {

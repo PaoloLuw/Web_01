@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
 class SongAdapterActivity_2(
-    private val countryList: List<SongModelActivity>,
+    private var countryList: List<SongModelActivity>,
     private val openArtistDetailsActivity: (String) -> Unit
 ) : RecyclerView.Adapter<SongAdapterActivity_2.ViewHolder>() {
 
+    fun update_lista (SongList_o : List<SongModelActivity>){
+        countryList=SongList_o
+        notifyDataSetChanged()
+    }
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val countryName: TextView = itemView.findViewById(R.id.country_name_tv)
         val countryImage: CircleImageView = itemView.findViewById(R.id.country_flag_iv)

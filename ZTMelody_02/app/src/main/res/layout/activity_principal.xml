@@ -81,21 +81,6 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnNext"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
-        android:background="@drawable/rounder_button"
-        android:text="Let's Start"
-        android:textColor="@color/black"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.934" />
-
-    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnScanMusic"
         android:layout_width="110dp"
         android:layout_height="40dp"
@@ -109,20 +94,43 @@
         android:background="@color/principalButton"
         />
 
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/PRUEVAS"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:background="@color/principalButton"
-        android:text="Experiment"
+            android:id="@+id/Google_btn"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:background="@drawable/rounder_button_google"
+        android:text="Contitue with Google"
         android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/ledger_regular"
         app:layout_constraintBottom_toTopOf="@+id/btnNext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.936"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/circle1"
+        app:layout_constraintVertical_bias="0.964"
+        android:textAllCaps="false"
+        android:drawableLeft="@drawable/ic_google_logo"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnNext"
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:background="@drawable/rounder_button"
+        android:text="Continue"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/ledger_regular"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.677" />
+        app:layout_constraintVertical_bias="0.934"
+        android:textAllCaps="false"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

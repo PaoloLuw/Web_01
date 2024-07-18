@@ -8,32 +8,44 @@
     tools:context=".MainActivity">
 
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="300dp"
+    <TextView
+        android:id="@+id/NameApp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:background="@drawable/search_bg"
-        android:drawableRight="@drawable/ic_music_note"
-        android:drawablePadding="9dp"
         android:fontFamily="@font/josefin_slab"
-        android:hint="Search your melody"
         android:padding="10dp"
+        android:text=" MyMelody"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textSize="13sp"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+    </TextView>
 
-    <ImageView
+    <ImageButton
+        android:id="@+id/BUTTONSEARCH"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/search_bg"
+        android:background="@color/principalBackground"
         android:padding="10dp"
-        android:src="@drawable/ic_play_pause"
-        app:layout_constraintBottom_toBottomOf="@+id/editText2"
+        android:src="@drawable/baseline_search_24"
+        app:layout_constraintBottom_toTopOf="@+id/nav_host_fragment_activity_main"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/NameApp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/principalBackground"
+        android:padding="10dp"
+        android:src="@drawable/ic_more_vert"
+        app:layout_constraintBottom_toBottomOf="@+id/BUTTONSEARCH"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText2" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -48,7 +60,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.074"
+        app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/bottom_nav_menu" />
 
     <fragment
@@ -57,10 +69,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintTop_toBottomOf="@id/nav_view"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NameApp"
         app:navGraph="@navigation/mobile_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

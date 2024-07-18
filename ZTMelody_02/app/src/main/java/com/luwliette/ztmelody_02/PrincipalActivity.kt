@@ -18,8 +18,10 @@ import com.luwliette.ztmelody_02.database.Song
 import com.luwliette.ztmelody_02.database.SongDatabase
 
 import com.luwliette.ztmelody_02.ui.WelcomeActivity
+//import com.luwliette.ztmelody_02.ui.pruebas.PruevasActivity
 
 class PrincipalActivity : AppCompatActivity()  {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Ocultar la ActionBar
@@ -60,9 +62,9 @@ class PrincipalActivity : AppCompatActivity()  {
             startActivity(intent)
         }
 
-        val PRUEVA = findViewById<Button>(R.id.PRUEVAS)
+        val PRUEVA = findViewById<Button>(R.id.Google_btn)
         PRUEVA.setOnClickListener {
-            val intent = Intent(this, WelcomeActivity::class.java)
+            val intent = Intent(this, SeekingForMusic::class.java)
             startActivity(intent)
         }
     }

@@ -7,13 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
-class SongAdapterActivity(
+class SongAdapterClass_3(
     private var countryList: ArrayList<SongModelActivity>,
-    private val songPaths: List<String>,
-    private val playSong: (List<String>, Int) -> Unit,
-    private val openSongDetailsActivity: () -> Unit,
+    private val playSong: (List<SongModelActivity>, Int) -> Unit,
+    private val openSongDetailsActivity: () -> Unit
+) : RecyclerView.Adapter<SongAdapterClass_3.ViewHolder>() {
 
-    ) : RecyclerView.Adapter<SongAdapterActivity.ViewHolder>() {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val countryName: TextView = itemView.findViewById(R.id.country_name_tv)
         val countryImage: CircleImageView = itemView.findViewById(R.id.country_flag_iv)
@@ -30,7 +29,7 @@ class SongAdapterActivity(
         holder.countryImage.setImageResource(country.countryImage)
 
         holder.itemView.setOnClickListener {
-            playSong(songPaths, position)
+            playSong(countryList, position)
             openSongDetailsActivity()
         }
     }
