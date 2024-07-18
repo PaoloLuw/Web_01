@@ -1,5 +1,7 @@
 package com.luwliette.ztmelody_02
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,11 +11,12 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.luwliette.ztmelody_02.R
-import com.luwliette.ztmelody_02.MusicService
+import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
 
 class MusicControlActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMusicControlBinding
+    private var isPlaying = false
     // Declaración de variables
     private lateinit var playPauseButton: Button
     private lateinit var nextButton: Button
@@ -27,7 +30,6 @@ class MusicControlActivity : AppCompatActivity() {
     // BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            supportActionBar?.hide()
             intent?.let {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
@@ -52,23 +54,28 @@ class MusicControlActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_music_control)
+        binding = ActivityMusicControlBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Inicialización de vistas
-        playPauseButton = findViewById(R.id.playPauseButton)
-        nextButton = findViewById(R.id.nextButton)
-        prevButton = findViewById(R.id.prevButton)
-        forwardButton = findViewById(R.id.forwardButton)
-        rewindButton = findViewById(R.id.rewindButton)
-        seekBar = findViewById(R.id.seekBar)
-        songNameTextView = findViewById(R.id.songNameTextView) // Nuevo: inicializar el TextView para el nombre de la canción
-        timeTextView = findViewById(R.id.timeTextView) // Nuevo: inicializar el TextView para el tiempo transcurrido
+        playPauseButton = binding.playPauseButton
+        nextButton = binding.nextButton
+        prevButton = binding.prevButton
+        forwardButton = binding.forwardButton
+        rewindButton = binding.rewindButton
+        seekBar = binding.seekBar
+        songNameTextView = binding.songNameTextView // Nuevo: inicializar el TextView para el nombre de la canción
+        timeTextView = binding.timeTextView // Nuevo: inicializar el TextView para el tiempo transcurrido
 
         // Inicializar el nombre de la canción con un texto predeterminado
         updateSongName("Nombre de la canción")
 
         // Configuración de listeners para los botones y la barra de progreso
-        playPauseButton.setOnClickListener { sendCommandToService(MusicService.ACTION_PLAY_PAUSE) }
+        playPauseButton.setOnClickListener {
+            isPlaying = !isPlaying
+            updatePlayPauseButton2()
+            sendCommandToService(MusicService.ACTION_PLAY_PAUSE)
+        }
         nextButton.setOnClickListener { sendCommandToService(MusicService.ACTION_NEXT) }
         prevButton.setOnClickListener { sendCommandToService(MusicService.ACTION_PREV) }
         forwardButton.setOnClickListener { sendCommandToService(MusicService.ACTION_FORWARD) }
@@ -118,4 +125,19 @@ class MusicControlActivity : AppCompatActivity() {
     private fun updateSongName(name: String) {
         songNameTextView.text = name
     }
+
+    private fun updatePlayPauseButton() {
+        val animatorSet: AnimatorSet = if (isPlaying) {
+            AnimatorInflater.loadAnimator(this, R.animator.play_to_pause) as AnimatorSet
+        } else {
+            AnimatorInflater.loadAnimator(this, R.animator.pause_to_play) as AnimatorSet
+        }
+        animatorSet.setTarget(playPauseButton)
+        animatorSet.start()
+    }
+    private fun updatePlayPauseButton2() {
+        val iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+        playPauseButton.setBackgroundResource(iconRes)
+    }
+
 }

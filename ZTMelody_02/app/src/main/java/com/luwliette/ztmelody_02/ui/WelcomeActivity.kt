@@ -20,29 +20,37 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
 
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_welcome)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        val sharedPreferences = getSharedPreferences("com.luwliette.ztmelody_02", MODE_PRIVATE)
+        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
 
-        val btnContinue = findViewById<Button>(R.id.btnContinue)
-        btnContinue.setOnClickListener {
-            // Solicitar permisos de acceso a la memoria
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            } else {
-                // Permiso ya otorgado, continuar a PrincipalActivity
-                proceedToPrincipalActivity()
+        if (isFirstRun) {
+            // Si es la primera vez que se ejecuta, realizar acciones necesarias
+            enableEdgeToEdge()
+            setContentView(R.layout.activity_welcome)
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
             }
+
+            val btnContinue = findViewById<Button>(R.id.btnContinue)
+            btnContinue.setOnClickListener {
+                // Solicitar permisos de acceso a la memoria
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+                } else {
+                    // Permiso ya otorgado, continuar a PrincipalActivity
+                    proceedToPrincipalActivity()
+                }
+            }
+        } else {
+            // Si no es la primera vez, ir directamente a PrincipalActivity
+            proceedToPrincipalActivity()
         }
     }
 
     private fun proceedToPrincipalActivity() {
-        Toast.makeText(applicationContext, "Me Tocaste!!", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, PrincipalActivity::class.java)
         startActivity(intent)
         finish()
@@ -58,8 +66,10 @@ class WelcomeActivity : AppCompatActivity() {
                 } else {
                     // Permiso denegado, manejar la situación apropiadamente
                     Toast.makeText(this, "Permiso denegado. No se puede continuar.", Toast.LENGTH_SHORT).show()
+                    finish() // Terminar la actividad si se deniega el permiso
                 }
             }
         }
     }
 }
+
