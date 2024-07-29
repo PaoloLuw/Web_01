@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.luwliette.ztmelody_02.database.Song
 import com.luwliette.ztmelody_02.database.SongDatabase
 import com.luwliette.ztmelody_02.databinding.ActivityMainBinding
+import com.luwliette.ztmelody_02.ui.pruebas.GoogleActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -89,9 +90,12 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_three -> {
-                Toast.makeText(this, "Mode Dark", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Go to Perfil", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, GoogleActivity::class.java)
+                startActivity(intent)
                 true
             }
+
             else -> false
         }
     }

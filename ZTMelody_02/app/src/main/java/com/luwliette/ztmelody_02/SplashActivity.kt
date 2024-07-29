@@ -29,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
         // Load circular image with Glide
         val userImage: ImageView = findViewById(R.id.user_image)
         Glide.with(this)
-            .load(R.drawable.fondo_img) // Replace with your actual image resource
+            .load(R.drawable.icon_normal) // Replace with your actual image resource
             .circleCrop()
             .into(userImage)
 
