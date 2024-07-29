@@ -65,11 +65,11 @@ class PrincipalActivity : AppCompatActivity()  {
             startActivity(intent)
         }
 
-        val scanButton = findViewById<Button>(R.id.btnScanMusic)
-        scanButton.setOnClickListener {
-            val intent = Intent(this, ScanMusicActivity::class.java)
-            startActivity(intent)
-        }
+//        val scanButton = findViewById<Button>(R.id.btnScanMusic)
+//        scanButton.setOnClickListener {
+//            val intent = Intent(this, ScanMusicActivity::class.java)
+//            startActivity(intent)
+//        }
 
         val PRUEVA = findViewById<Button>(R.id.Google_btn)
         PRUEVA.setOnClickListener {
