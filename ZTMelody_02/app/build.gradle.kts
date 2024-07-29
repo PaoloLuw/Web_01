@@ -59,7 +59,4 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    //implementation ("androidx.credentials:credentials:20.7.0")
-    //implementation ("androidx.credentials:credentials-play-services-auth:20.7.0")
-    //implementation ("com.google.android.libraries.identity.googleid:googleid:20.7.0")
 }

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.pruebas.MainActivity2">
+    android:layout_height="match_parent">
 
 
     <Button
@@ -31,3 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Google" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--    tools:context=".ui.pruebas.MainActivity2"-->

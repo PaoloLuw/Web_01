@@ -18,6 +18,8 @@ import com.luwliette.ztmelody_02.database.Song
 import com.luwliette.ztmelody_02.database.SongDatabase
 
 import com.luwliette.ztmelody_02.ui.WelcomeActivity
+import com.luwliette.ztmelody_02.ui.pruebas.GoogleActivity
+
 //import com.luwliette.ztmelody_02.ui.pruebas.PruevasActivity
 
 class PrincipalActivity : AppCompatActivity()  {
@@ -42,12 +44,13 @@ class PrincipalActivity : AppCompatActivity()  {
             }
             // Establecer isFirstRun a false después de la primera ejecución
             sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
-        }else {
-            // Si no es la primera ejecución, ir directamente a MainActivity
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
         }
+        //else {
+//            // Si no es la primera ejecución, ir directamente a MainActivity
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//        }
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -70,7 +73,7 @@ class PrincipalActivity : AppCompatActivity()  {
 
         val PRUEVA = findViewById<Button>(R.id.Google_btn)
         PRUEVA.setOnClickListener {
-            val intent = Intent(this, SeekingForMusic::class.java)
+            val intent = Intent(this, GoogleActivity::class.java)
             startActivity(intent)
         }
     }
