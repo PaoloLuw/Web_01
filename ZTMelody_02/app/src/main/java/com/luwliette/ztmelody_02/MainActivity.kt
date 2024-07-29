@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_three -> {
-                Toast.makeText(this, "Action Three clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Mode Dark", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> false

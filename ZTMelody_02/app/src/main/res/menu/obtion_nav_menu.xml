@@ -8,5 +8,5 @@
         android:title="Favorites"/>
     <item
         android:id="@+id/action_three"
-        android:title="Options"/>
+        android:title="Edit Perfil"/>
 </menu>

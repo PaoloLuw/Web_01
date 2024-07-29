@@ -22,6 +22,8 @@ class SeekingForMusic : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+
+        supportActionBar?.hide()
         binding = ActivitySeekingForMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
