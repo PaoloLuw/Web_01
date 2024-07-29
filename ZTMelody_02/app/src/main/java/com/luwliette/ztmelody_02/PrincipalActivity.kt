@@ -63,6 +63,8 @@ class PrincipalActivity : AppCompatActivity()  {
         button.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+
         }
 
 //        val scanButton = findViewById<Button>(R.id.btnScanMusic)
@@ -75,6 +77,7 @@ class PrincipalActivity : AppCompatActivity()  {
         PRUEVA.setOnClickListener {
             val intent = Intent(this, GoogleActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
     }
 
@@ -130,5 +133,10 @@ class PrincipalActivity : AppCompatActivity()  {
             Log.d("ScanMusicActivity", "Song: $it")
         }
     }
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    }
+
 
 }

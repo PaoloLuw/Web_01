@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         binding.BUTTONSEARCH.setOnClickListener {
             val intent = Intent(this, SeekingForMusic::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
     }
 
@@ -146,6 +147,11 @@ class MainActivity : AppCompatActivity() {
         songList.forEach {
             Log.d("ScanMusicActivity", "Song: $it")
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
 }

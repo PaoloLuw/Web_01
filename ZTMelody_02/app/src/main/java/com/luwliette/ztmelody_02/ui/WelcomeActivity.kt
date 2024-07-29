@@ -42,17 +42,20 @@ class WelcomeActivity : AppCompatActivity() {
                 } else {
                     // Permiso ya otorgado, continuar a PrincipalActivity
                     proceedToPrincipalActivity()
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 }
             }
         } else {
             // Si no es la primera vez, ir directamente a PrincipalActivity
             proceedToPrincipalActivity()
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
     }
 
     private fun proceedToPrincipalActivity() {
         val intent = Intent(this, PrincipalActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         finish()
     }
 

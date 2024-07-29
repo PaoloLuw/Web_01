@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.databinding.ActivityGoogleBinding
 
 class GoogleActivity : AppCompatActivity() {
@@ -99,5 +100,9 @@ class GoogleActivity : AppCompatActivity() {
             Toast.makeText(this, "Sign in intent is null", Toast.LENGTH_SHORT).show()
             Log.d("GoogleActivitySSS", "Sign in intent is null")
         }
+    }
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 }
