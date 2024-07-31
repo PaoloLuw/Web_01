@@ -45,7 +45,7 @@ class PrincipalActivity : AppCompatActivity()  {
             // Establecer isFirstRun a false después de la primera ejecución
             sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
         }
-        //else {
+//        else {
 //            // Si no es la primera ejecución, ir directamente a MainActivity
 //            val intent = Intent(this, MainActivity::class.java)
 //            startActivity(intent)
