@@ -10,5 +10,6 @@
     <color name="principalBackground">#12171D</color>
     <color name="principalButton">#F5DB7C</color>
     <color name="principalWhite">#ECEBEB</color>
+    <color name="colorButtons">#B6B6B6</color>
     <color name="secondaryBackground">#16141D</color>
 </resources>

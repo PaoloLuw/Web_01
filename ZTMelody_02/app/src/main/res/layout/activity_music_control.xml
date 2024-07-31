@@ -71,14 +71,14 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/rewindButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/ic_rewind"
             android:contentDescription="@string/rewind" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/prevButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -87,14 +87,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/playPauseButton"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:background="@drawable/ic_pause"
             android:contentDescription="@string/play_pause" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/nextButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -103,7 +103,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/forwardButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
