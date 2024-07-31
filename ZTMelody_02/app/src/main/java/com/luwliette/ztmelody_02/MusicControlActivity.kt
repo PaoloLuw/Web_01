@@ -13,19 +13,21 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
 
+import android.os.Handler
+import android.os.Looper
+
 class MusicControlActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMusicControlBinding
-    private var isPlaying = false
-    // Declaración de variables
+    private var isPlaying = true
     private lateinit var playPauseButton: Button
     private lateinit var nextButton: Button
     private lateinit var prevButton: Button
     private lateinit var forwardButton: Button
     private lateinit var rewindButton: Button
     private lateinit var seekBar: SeekBar
-    private lateinit var songNameTextView: TextView // Nuevo: TextView para el nombre de la canción
-    private lateinit var timeTextView: TextView // Nuevo: TextView para el tiempo transcurrido
+    private lateinit var songNameTextView: TextView
+    private lateinit var timeTextView: TextView
 
     // BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
@@ -33,13 +35,12 @@ class MusicControlActivity : AppCompatActivity() {
             intent?.let {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
-                val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME) // Nuevo: obtener el nombre de la canción
+                val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME)
                 if (duration > 0) {
                     seekBar.max = duration
                     seekBar.progress = currentPosition
                     timeTextView.text = formatDuration(currentPosition) + " / " + formatDuration(duration)
                 }
-                // Nuevo: actualizar el TextView del nombre de la canción
                 songName?.let { updateSongName(it) }
             }
         }
@@ -54,23 +55,22 @@ class MusicControlActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+
         binding = ActivityMusicControlBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicialización de vistas
         playPauseButton = binding.playPauseButton
         nextButton = binding.nextButton
         prevButton = binding.prevButton
         forwardButton = binding.forwardButton
         rewindButton = binding.rewindButton
         seekBar = binding.seekBar
-        songNameTextView = binding.songNameTextView // Nuevo: inicializar el TextView para el nombre de la canción
-        timeTextView = binding.timeTextView // Nuevo: inicializar el TextView para el tiempo transcurrido
+        songNameTextView = binding.songNameTextView
+        timeTextView = binding.timeTextView
 
-        // Inicializar el nombre de la canción con un texto predeterminado
         updateSongName("Nombre de la canción")
 
-        // Configuración de listeners para los botones y la barra de progreso
         playPauseButton.setOnClickListener {
             isPlaying = !isPlaying
             updatePlayPauseButton2()
@@ -91,20 +91,26 @@ class MusicControlActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        // Registro del BroadcastReceiver para recibir actualizaciones del servicio de música
         val filter = IntentFilter().apply {
             addAction(MusicService.ACTION_UPDATE_UI)
         }
         registerReceiver(musicReceiver, filter)
+
+        // Usar Handler para presionar el botón dos veces después de un breve retraso
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            simulateButtonClick()
+            handler.postDelayed({
+                simulateButtonClick()
+            }, 10) // Retraso de 200 ms entre los dos clics
+        }, 10) // Retraso de 500 ms después de que la actividad se cargue
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Desregistro del BroadcastReceiver al destruir la actividad
         unregisterReceiver(musicReceiver)
     }
 
-    // Función para enviar comandos al servicio de música
     private fun sendCommandToService(action: String) {
         val intent = Intent(this, MusicService::class.java).apply {
             this.action = action
@@ -112,7 +118,6 @@ class MusicControlActivity : AppCompatActivity() {
         startService(intent)
     }
 
-    // Función para enviar comandos de búsqueda al servicio de música
     private fun sendSeekCommandToService(position: Int) {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_SEEK_TO
@@ -121,23 +126,17 @@ class MusicControlActivity : AppCompatActivity() {
         startService(intent)
     }
 
-    // Función para actualizar el nombre de la canción en el TextView correspondiente
     private fun updateSongName(name: String) {
         songNameTextView.text = name
     }
 
-    private fun updatePlayPauseButton() {
-        val animatorSet: AnimatorSet = if (isPlaying) {
-            AnimatorInflater.loadAnimator(this, R.animator.play_to_pause) as AnimatorSet
-        } else {
-            AnimatorInflater.loadAnimator(this, R.animator.pause_to_play) as AnimatorSet
-        }
-        animatorSet.setTarget(playPauseButton)
-        animatorSet.start()
-    }
     private fun updatePlayPauseButton2() {
         val iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         playPauseButton.setBackgroundResource(iconRes)
     }
 
+    private fun simulateButtonClick() {
+        playPauseButton.performClick()
+    }
 }
+

@@ -68,6 +68,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun openSongDetailsActivity() {
+        //aqui que busque que se esta reproduciendo
         val intent = Intent(requireContext(), MusicControlActivity::class.java)
         startActivity(intent)
     }

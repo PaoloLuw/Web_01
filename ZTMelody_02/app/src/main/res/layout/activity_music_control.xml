@@ -91,7 +91,7 @@
             android:id="@+id/playPauseButton"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:background="@drawable/ic_play"
+            android:background="@drawable/ic_pause"
             android:contentDescription="@string/play_pause" />
 
         <Button
