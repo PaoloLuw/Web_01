@@ -66,7 +66,7 @@ class FavoriteSongsActivity : AppCompatActivity() {
     }
 
     private fun openSongDetailsActivity() {
-        val intent = Intent(this, MusicControlActivity::class.java)
+        val intent = Intent(this, MusicControlActivity_SCN::class.java)
         startActivity(intent)
     }
     override fun finish() {

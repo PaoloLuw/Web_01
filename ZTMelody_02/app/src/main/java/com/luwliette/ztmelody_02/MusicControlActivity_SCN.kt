@@ -1,35 +1,34 @@
-package com.luwliette.ztmelody_02.ui.artist
+package com.luwliette.ztmelody_02
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.luwliette.ztmelody_02.MusicService
-import com.luwliette.ztmelody_02.R
-import com.luwliette.ztmelody_02.databinding.FragmentArtistBinding
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.TimeUtils.formatDuration
+import com.luwliette.ztmelody_02.database.FavoriteSong
 import com.luwliette.ztmelody_02.database.FavoriteSongsDatabase
 import com.luwliette.ztmelody_02.database.SongDatabase
-import com.luwliette.ztmelody_02.database.FavoriteSong
+import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
 
-class ArtistFragment : Fragment() {
+class MusicControlActivity_SCN : AppCompatActivity() {
 
-    private var _binding: FragmentArtistBinding? = null
-    private val binding get() = _binding!!
-
+    private var musicService: MusicService? = null
+    private var isBound = false
+    private lateinit var binding: ActivityMusicControlBinding
     private var isPlaying = true
-
     private lateinit var playPauseButton: Button
     private lateinit var nextButton: Button
     private lateinit var prevButton: Button
@@ -49,42 +48,54 @@ class ArtistFragment : Fragment() {
     private var currentSongData: String = ""
     private var currentSongDateAdded: Long = 0
 
+    // BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
-                val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME)
+                val songPath = it.getStringExtra(MusicService.EXTRA_SONG_PATH)
 
-                Log.d("ArtistFragment", "Received update: duration=$duration, currentPosition=$currentPosition, songName=$songName")
+                Log.d("MusicControlActivity_SCN", "Received update: duration=$duration, currentPosition=$currentPosition, songPath=$songPath")
 
                 if (duration > 0) {
                     seekBar.max = duration
                     seekBar.progress = currentPosition
-                    timeTextView.text = formatDuration(currentPosition) + " / " + formatDuration(duration)
+                    timeTextView.text = formatDurationCustom(currentPosition) + " / " + formatDurationCustom(duration)
                 }
-                songName?.let { updateSongDetails(it) }
+
+                songPath?.let { path ->
+                    updateSongName(extractSongNameFromPath(path)) // Llamada a extractSongNameFromPath
+                }
             }
         }
     }
 
-    private fun formatDuration(duration: Int): String {
-        val minutes = duration / 1000 / 60
-        val seconds = duration / 1000 % 60
-        return String.format("%02d:%02d", minutes, seconds)
+
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicBinder
+            musicService = binder.getService()
+            isBound = true
+
+            // Obtener el path de la canción actual y mostrar el nombre
+            val currentSongPath = musicService?.getCurrentSongPath()
+            currentSongPath?.let { updateSongName(extractSongNameFromPath(it)) }
+            Log.d("CurrentSongPath", "The current song path is: $currentSongPath")
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false
+        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentArtistBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding = ActivityMusicControlBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         playPauseButton = binding.playPauseButton
         nextButton = binding.nextButton
@@ -96,28 +107,45 @@ class ArtistFragment : Fragment() {
         timeTextView = binding.timeTextView
         addFavoriteButton = binding.addFavoriteButton
 
-        songDatabase = SongDatabase(requireContext())
-        favoriteSongsDatabase = FavoriteSongsDatabase(requireContext())
-
-        updateSongName("Nombre de la canción")
+        songDatabase = SongDatabase(this)
+        favoriteSongsDatabase = FavoriteSongsDatabase(this)
 
         playPauseButton.setOnClickListener {
             isPlaying = !isPlaying
-            updatePlayPauseButton2()
+            updatePlayPauseButton()
             sendCommandToService(MusicService.ACTION_PLAY_PAUSE)
         }
-        nextButton.setOnClickListener { sendCommandToService(MusicService.ACTION_NEXT) }
-        prevButton.setOnClickListener { sendCommandToService(MusicService.ACTION_PREV) }
+
+        nextButton.setOnClickListener {
+            sendCommandToService(MusicService.ACTION_NEXT)
+            Handler(Looper.getMainLooper()).postDelayed({
+                val currentSongPath = musicService?.getCurrentSongPath()
+                currentSongPath?.let { path ->
+                    updateSongName(extractSongNameFromPath(path))
+                }
+            }, 200) // Retardo de 200 ms
+        }
+
+        prevButton.setOnClickListener {
+            sendCommandToService(MusicService.ACTION_PREV)
+            Handler(Looper.getMainLooper()).postDelayed({
+                val currentSongPath = musicService?.getCurrentSongPath()
+                currentSongPath?.let { path ->
+                    updateSongName(extractSongNameFromPath(path))
+                }
+            }, 200) // Retardo de 200 ms
+        }
+
         forwardButton.setOnClickListener { sendCommandToService(MusicService.ACTION_FORWARD) }
         rewindButton.setOnClickListener { sendCommandToService(MusicService.ACTION_REWIND) }
 
         addFavoriteButton.setOnClickListener {
+
             val songTitle = songNameTextView.text.toString()
-            Log.d("ArtistFragment", "Add/Remove favorite button clicked. Song title: $songTitle")
 
             // Obtener la canción por título
             val song = songDatabase.getSongByTitle(songTitle)
-
+            Log.d("Problem of my communication", "Add/Remove favorite button clicked. Song title: $song")
             if (song != null) {
                 if (favoriteSongsDatabase.isFavorite(song.id)) {
                     favoriteSongsDatabase.removeFavoriteSong(song.id)
@@ -149,6 +177,7 @@ class ArtistFragment : Fragment() {
                     sendSeekCommandToService(progress)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
@@ -156,7 +185,7 @@ class ArtistFragment : Fragment() {
         val filter = IntentFilter().apply {
             addAction(MusicService.ACTION_UPDATE_UI)
         }
-        requireContext().registerReceiver(musicReceiver, filter)
+        registerReceiver(musicReceiver, filter)
 
         // Usar Handler para presionar el botón dos veces después de un breve retraso
         val handler = Handler(Looper.getMainLooper())
@@ -164,29 +193,43 @@ class ArtistFragment : Fragment() {
             simulateButtonClick()
             handler.postDelayed({
                 simulateButtonClick()
-            }, 10) // Retraso de 10 ms entre los dos clics
-        }, 10) // Retraso de 10 ms después de que la vista se cargue
+            }, 10)
+        }, 10)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireContext().unregisterReceiver(musicReceiver)
-        _binding = null
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(musicReceiver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, MusicService::class.java).also { intent ->
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isBound) {
+            unbindService(serviceConnection)
+            isBound = false
+        }
     }
 
     private fun sendCommandToService(action: String) {
-        val intent = Intent(requireContext(), MusicService::class.java).apply {
+        val intent = Intent(this, MusicService::class.java).apply {
             this.action = action
         }
-        requireContext().startService(intent)
+        startService(intent)
     }
 
     private fun sendSeekCommandToService(position: Int) {
-        val intent = Intent(requireContext(), MusicService::class.java).apply {
+        val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_SEEK_TO
             putExtra(MusicService.EXTRA_SEEK_POSITION, position)
         }
-        requireContext().startService(intent)
+        startService(intent)
     }
 
     private fun updateSongName(name: String) {
@@ -208,11 +251,11 @@ class ArtistFragment : Fragment() {
     }
 
     private fun updateFavoriteButton(isFavorite: Boolean) {
-        val drawable = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_nofavorite
+        val drawable = if (isFavorite) R.drawable.ic_nothing else R.drawable.ic_nothing
         addFavoriteButton.setBackgroundResource(drawable)
     }
 
-    private fun updatePlayPauseButton2() {
+    private fun updatePlayPauseButton() {
         val iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         playPauseButton.setBackgroundResource(iconRes)
     }
@@ -221,7 +264,20 @@ class ArtistFragment : Fragment() {
         playPauseButton.performClick()
     }
 
+    // Función para mostrar un Toast
     private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+    // Función para extraer el nombre de la canción desde el path
+    private fun extractSongNameFromPath(path: String): String {
+        return path.substringAfterLast("/")
+    }
+
+    private fun formatDurationCustom(duration: Int): String {
+        val minutes = duration / 1000 / 60
+        val seconds = duration / 1000 % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
 }

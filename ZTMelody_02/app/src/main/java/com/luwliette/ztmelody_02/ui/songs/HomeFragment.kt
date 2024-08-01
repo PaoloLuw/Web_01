@@ -60,6 +60,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun playSong(songPaths: List<String>, songIndex: Int) {
+
+        Log.d("playSongCheck", "Playing song at index: $songIndex, Song list: $songPaths")
+
         val intent = Intent(requireContext(), MusicService::class.java).apply {
             putStringArrayListExtra("SONG_LIST", ArrayList(songPaths))
             putExtra("SONG_INDEX", songIndex)

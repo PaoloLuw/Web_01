@@ -52,6 +52,8 @@ class SeekingForMusic : AppCompatActivity() {
 
         songViewModel.setSongList(musicList)
 
+        songViewModel.filterSongs("") // Inicialmente muestra todas las canciones
+
         songViewModel.filteredSongList.observe(this) { filteredSongs ->
             adapter.updateSongs(filteredSongs as ArrayList<SongModelActivity>)
         }
@@ -73,8 +75,12 @@ class SeekingForMusic : AppCompatActivity() {
     }
 
     private fun playSong(filteredSongs: List<SongModelActivity>, position: Int) {
+
         val filteredSong = filteredSongs[position]
         val songIndex = getOriginalIndex(filteredSong)
+
+        Log.d("playSongCheck", "Playing song at index: $songIndex")
+
         if (songIndex != -1) {
             Log.d("SeekingForMusicpp", "Playing song at index: $songIndex")
             val songPaths = songList.map { it.data }

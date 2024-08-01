@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/principalBackground"
-    tools:context=".ui.artist.ArtistFragment">
+    tools:context=".MusicControlActivity">
 
     <ImageView
         android:id="@+id/photoImageView"
@@ -116,7 +116,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/ic_nofavorite"
+        android:background="@drawable/ic_nothing"
         app:layout_constraintBottom_toTopOf="@+id/controlPanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/songNameTextView"

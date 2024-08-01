@@ -38,23 +38,25 @@ class PrincipalActivity : AppCompatActivity()  {
         val sharedPreferences = getSharedPreferences("com.luwliette.ztmelody_02", MODE_PRIVATE)
         val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
 
+        // Solicitar permisos la primera vez que se inicia la aplicación
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        } else {
+            scanMusicFiles()
+            Log.d("Scanned", "Scanned2")
+        }
         if (isFirstRun) {
-            // Solicitar permisos la primera vez que se inicia la aplicación
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            } else {
-                scanMusicFiles()
-            }
+
             // Establecer isFirstRun a false después de la primera ejecución
             sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
         }
-//        else {
-//            // Si no es la primera ejecución, ir directamente a MainActivity
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
+        else {
+            // Si no es la primera ejecución, ir directamente a MainActivity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

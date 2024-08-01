@@ -3,6 +3,7 @@ package com.luwliette.ztmelody_02
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
@@ -10,6 +11,17 @@ import com.luwliette.ztmelody_02.database.SongDatabase
 
 class MusicService : Service() {
 
+    private val binder = MusicBinder()
+    private var musicService: MusicService? = null
+    private var isBound = false
+
+    inner class MusicBinder : Binder() {
+        fun getService(): MusicService = this@MusicService
+    }
+
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
     companion object {
         const val ACTION_PLAY_PAUSE = "com.luwliette.ztmelody_02.PLAY_PAUSE"
         const val ACTION_NEXT = "com.luwliette.ztmelody_02.NEXT"
@@ -77,10 +89,6 @@ class MusicService : Service() {
         handler.removeCallbacks(updateSeekBarTask)
         mediaPlayer?.release()
         super.onDestroy()
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
     }
 
     private fun playSong(songPath: String) {
@@ -166,6 +174,14 @@ class MusicService : Service() {
         if (allSongs.isNotEmpty()) {
             val randomSong = allSongs.random()
             playSong(randomSong.data)
+        }
+    }
+
+    fun getCurrentSongPath(): String? {
+        return if (currentSongIndex >= 0 && currentSongIndex < songList.size) {
+            songList[currentSongIndex]
+        } else {
+            null
         }
     }
 

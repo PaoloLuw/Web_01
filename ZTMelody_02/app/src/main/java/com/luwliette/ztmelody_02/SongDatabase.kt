@@ -202,6 +202,8 @@ class SongDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
         return song
         }
+
+
     fun getSongByTitle(title: String): Song? {
         val db = readableDatabase
         val selectQuery = "SELECT * FROM ${SongDatabase.TABLE_SONGS} WHERE ${SongDatabase.COLUMN_TITLE} = ?"
@@ -220,6 +222,5 @@ class SongDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
         return song
     }
-
 
 }

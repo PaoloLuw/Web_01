@@ -2,8 +2,8 @@
     <string name="app_name">MyMelody_02</string>
     <string name="title_home">Songs</string>
     <string name="title_dashboard">Suggested</string>
-    <string name="title_notifications">Album</string>
-    <string name="title_artist">Artist</string>
+    <string name="title_notifications">Artist</string>
+    <string name="title_song">Reproducer</string>
 
     <string name="rewind">Rebobinar</string>
     <string name="previous">Pista anterior</string>

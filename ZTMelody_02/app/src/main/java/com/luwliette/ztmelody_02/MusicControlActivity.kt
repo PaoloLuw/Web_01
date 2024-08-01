@@ -48,6 +48,10 @@ class MusicControlActivity : AppCompatActivity() {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
                 val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME)
+
+                Log.d("Problem of my comunication", "Received update: duration=$duration, currentPosition=$currentPosition, songName=$songName")
+
+
                 if (duration > 0) {
                     seekBar.max = duration
                     seekBar.progress = currentPosition
@@ -99,6 +103,7 @@ class MusicControlActivity : AppCompatActivity() {
 
         addFavoriteButton.setOnClickListener {
             val songTitle = songNameTextView.text.toString()
+            Log.d("Problem of my comunication", "Add/Remove favorite button clicked. Song title: $songTitle")
 
             // Obtener la canción por título
             val song = songDatabase.getSongByTitle(songTitle)

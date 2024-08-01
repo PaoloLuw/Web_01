@@ -27,6 +27,6 @@
     <fragment
         android:id="@+id/navigation_artist"
         android:name="com.luwliette.ztmelody_02.ui.artist.ArtistFragment"
-        android:label="@string/title_artist"
+        android:label="@string/title_song"
         tools:layout="@layout/fragment_artist" />
 </navigation>
