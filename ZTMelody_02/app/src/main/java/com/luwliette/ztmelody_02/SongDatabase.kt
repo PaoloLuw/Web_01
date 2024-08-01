@@ -184,4 +184,42 @@ class SongDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return if (songList.size > count) songList.take(count) else songList
     }
 
+    fun getSongById(id: Long): Song? {
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_SONGS WHERE $COLUMN_ID = ?"
+        val cursor: Cursor = db.rawQuery(selectQuery, arrayOf(id.toString()))
+
+        var song: Song? = null
+        if (cursor.moveToFirst()) {
+            val songId = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
+            val artist = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTIST))
+            val data = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATA))
+            val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_DATE_ADDED))
+            song = Song(songId, title, artist, data, dateAdded)
+        }
+        cursor.close()
+        db.close()
+        return song
+        }
+    fun getSongByTitle(title: String): Song? {
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM ${SongDatabase.TABLE_SONGS} WHERE ${SongDatabase.COLUMN_TITLE} = ?"
+        val cursor: Cursor = db.rawQuery(selectQuery, arrayOf(title))
+
+        var song: Song? = null
+        if (cursor.moveToFirst()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(SongDatabase.COLUMN_ID))
+            val songTitle = cursor.getString(cursor.getColumnIndexOrThrow(SongDatabase.COLUMN_TITLE))
+            val artist = cursor.getString(cursor.getColumnIndexOrThrow(SongDatabase.COLUMN_ARTIST))
+            val data = cursor.getString(cursor.getColumnIndexOrThrow(SongDatabase.COLUMN_DATA))
+            val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(SongDatabase.COLUMN_DATE_ADDED))
+            song = Song(id, songTitle, artist, data, dateAdded)
+        }
+        cursor.close()
+        db.close()
+        return song
+    }
+
+
 }

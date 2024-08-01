@@ -1,21 +1,22 @@
 package com.luwliette.ztmelody_02
 
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.widget.Button
-import android.widget.SeekBar
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
-
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
+import com.luwliette.ztmelody_02.database.FavoriteSongsDatabase
+import com.luwliette.ztmelody_02.database.SongDatabase
+import com.luwliette.ztmelody_02.database.FavoriteSong
 
 class MusicControlActivity : AppCompatActivity() {
 
@@ -29,31 +30,33 @@ class MusicControlActivity : AppCompatActivity() {
     private lateinit var seekBar: SeekBar
     private lateinit var songNameTextView: TextView
     private lateinit var timeTextView: TextView
+    private lateinit var addFavoriteButton: Button
+
+    private lateinit var songDatabase: SongDatabase
+    private lateinit var favoriteSongsDatabase: FavoriteSongsDatabase
+
+    private var currentSongId: Long = 0
+    private var currentSongTitle: String = ""
+    private var currentSongArtist: String = ""
+    private var currentSongData: String = ""
+    private var currentSongDateAdded: Long = 0
 
     // BroadcastReceiver para recibir actualizaciones del servicio de música
-// BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
                 val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME)
-
-                // Log para imprimir los valores recibidos
-                Log.d("FiltrandoMusicas", "Duration received: $duration")
-                Log.d("FiltrandoMusicas", "Current position received: $currentPosition")
-                Log.d("FiltrandoMusicas", "Song name received: $songName")
-
                 if (duration > 0) {
                     seekBar.max = duration
                     seekBar.progress = currentPosition
                     timeTextView.text = formatDuration(currentPosition) + " / " + formatDuration(duration)
                 }
-                songName?.let { updateSongName(it) }
+                songName?.let { updateSongDetails(it) }
             }
         }
     }
-
 
     // Función para formatear la duración en minutos y segundos
     private fun formatDuration(duration: Int): String {
@@ -77,6 +80,10 @@ class MusicControlActivity : AppCompatActivity() {
         seekBar = binding.seekBar
         songNameTextView = binding.songNameTextView
         timeTextView = binding.timeTextView
+        addFavoriteButton = binding.addFavoriteButton
+
+        songDatabase = SongDatabase(this)
+        favoriteSongsDatabase = FavoriteSongsDatabase(this)
 
         updateSongName("Nombre de la canción")
 
@@ -89,6 +96,42 @@ class MusicControlActivity : AppCompatActivity() {
         prevButton.setOnClickListener { sendCommandToService(MusicService.ACTION_PREV) }
         forwardButton.setOnClickListener { sendCommandToService(MusicService.ACTION_FORWARD) }
         rewindButton.setOnClickListener { sendCommandToService(MusicService.ACTION_REWIND) }
+
+        addFavoriteButton.setOnClickListener {
+            val songTitle = songNameTextView.text.toString()
+
+            // Obtener la canción por título
+            val song = songDatabase.getSongByTitle(songTitle)
+
+            if (song != null) {
+                if (favoriteSongsDatabase.isFavorite(song.id)) {
+                    favoriteSongsDatabase.removeFavoriteSong(song.id)
+                    updateFavoriteButton(false)
+                    Log.d("FavoritesPrint", "Removed from favorites: ${song.title} by ${song.artist}")
+                    showToast("${song.title} removed from favorites")
+                } else {
+                    val favoriteSong = FavoriteSong(song.id, song.title, song.artist, song.data, song.dateAdded)
+                    favoriteSongsDatabase.addFavoriteSong(favoriteSong)
+                    updateFavoriteButton(true)
+                    Log.d("FavoritesPrint", "Added to favorites: ${song.title} by ${song.artist}")
+                    showToast("${song.title} added to favorites")
+                }
+
+                // Mostrar todos los favoritos actuales
+                val allFavorites = favoriteSongsDatabase.getAllFavoriteSongs()
+                Log.d("Favorites", "Current favorite songs:")
+                allFavorites.forEach { favorite ->
+                    Log.d("FavoritesPrint", "Title: ${favorite.title}, Artist: ${favorite.artist}")
+                }
+            } else {
+                Log.d("Error", "Song not found in the database")
+            }
+        }
+
+
+
+
+
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -139,6 +182,25 @@ class MusicControlActivity : AppCompatActivity() {
         songNameTextView.text = name
     }
 
+    private fun updateSongDetails(songName: String) {
+        songNameTextView.text = songName
+        // Aquí, extrae la información de la canción desde la base de datos
+        val song = songDatabase.getSongById(currentSongId)
+        song?.let {
+            currentSongId = it.id
+            currentSongTitle = it.title
+            currentSongArtist = it.artist
+            currentSongData = it.data
+            currentSongDateAdded = it.dateAdded
+            updateFavoriteButton(favoriteSongsDatabase.isFavorite(currentSongId))
+        }
+    }
+
+    private fun updateFavoriteButton(isFavorite: Boolean) {
+        val drawable = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_nofavorite
+        addFavoriteButton.setBackgroundResource(drawable)
+    }
+
     private fun updatePlayPauseButton2() {
         val iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         playPauseButton.setBackgroundResource(iconRes)
@@ -147,5 +209,8 @@ class MusicControlActivity : AppCompatActivity() {
     private fun simulateButtonClick() {
         playPauseButton.performClick()
     }
+    // Función para mostrar un Toast
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }
-

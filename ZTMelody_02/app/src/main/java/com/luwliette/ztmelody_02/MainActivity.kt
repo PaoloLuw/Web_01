@@ -86,13 +86,19 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_two -> {
-                Toast.makeText(this, "Favorites", Toast.LENGTH_SHORT).show()
+                // Iniciar la actividad para mostrar canciones favoritas
+                val intent = Intent(this, FavoriteSongsActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 true
+
+
             }
             R.id.action_three -> {
                 Toast.makeText(this, "Go to Perfil", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, GoogleActivity::class.java)
                 startActivity(intent)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 true
             }
 
