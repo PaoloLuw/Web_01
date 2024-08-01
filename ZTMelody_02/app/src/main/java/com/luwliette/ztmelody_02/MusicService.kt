@@ -57,15 +57,21 @@ class MusicService : Service() {
             ACTION_REWIND -> rewindSong()
             ACTION_SEEK_TO -> seekTo(intent.getIntExtra(EXTRA_SEEK_POSITION, 0))
             else -> {
-                songList = intent?.getStringArrayListExtra("SONG_LIST") ?: emptyList()
-                currentSongIndex = intent?.getIntExtra("SONG_INDEX", 0) ?: 0
-                if (songList.isNotEmpty()) {
+                val newSongList = intent?.getStringArrayListExtra("SONG_LIST") ?: emptyList()
+                if (newSongList.isNotEmpty()) {
+                    songList = newSongList
+                    if (intent != null) {
+                        currentSongIndex = intent.getIntExtra("SONG_INDEX", 0)
+                    }
                     playSong(songList[currentSongIndex])
+                } else {
+                    Log.e("MusicService", "Received empty song list or null intent")
                 }
             }
         }
         return START_STICKY
     }
+
 
     override fun onDestroy() {
         handler.removeCallbacks(updateSeekBarTask)

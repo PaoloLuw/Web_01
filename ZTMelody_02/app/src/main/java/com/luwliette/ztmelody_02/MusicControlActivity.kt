@@ -15,6 +15,7 @@ import com.luwliette.ztmelody_02.databinding.ActivityMusicControlBinding
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 class MusicControlActivity : AppCompatActivity() {
 
@@ -30,12 +31,19 @@ class MusicControlActivity : AppCompatActivity() {
     private lateinit var timeTextView: TextView
 
     // BroadcastReceiver para recibir actualizaciones del servicio de música
+// BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 val duration = it.getIntExtra(MusicService.EXTRA_DURATION, 0)
                 val currentPosition = it.getIntExtra(MusicService.EXTRA_CURRENT_POSITION, 0)
                 val songName = it.getStringExtra(MusicService.EXTRA_SONG_NAME)
+
+                // Log para imprimir los valores recibidos
+                Log.d("FiltrandoMusicas", "Duration received: $duration")
+                Log.d("FiltrandoMusicas", "Current position received: $currentPosition")
+                Log.d("FiltrandoMusicas", "Song name received: $songName")
+
                 if (duration > 0) {
                     seekBar.max = duration
                     seekBar.progress = currentPosition
@@ -45,6 +53,7 @@ class MusicControlActivity : AppCompatActivity() {
             }
         }
     }
+
 
     // Función para formatear la duración en minutos y segundos
     private fun formatDuration(duration: Int): String {
