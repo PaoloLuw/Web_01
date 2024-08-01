@@ -31,6 +31,10 @@ class PrincipalActivity : AppCompatActivity()  {
         enableEdgeToEdge()
         setContentView(R.layout.activity_principal)
 
+        // Iniciar el servicio en primer plano automáticamente al abrir la actividad
+        val serviceIntent = Intent(this, MyForegroundService::class.java)
+        startService(serviceIntent)
+
         val sharedPreferences = getSharedPreferences("com.luwliette.ztmelody_02", MODE_PRIVATE)
         val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
 

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -73,10 +74,16 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
-        <!-- Service -->
         <service
             android:name=".MusicService"
             android:foregroundServiceType="mediaPlayback" />
+
+        <service
+            android:name=".MyForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+
     </application>
 
 </manifest>
