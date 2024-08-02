@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.luwliette.ztmelody_02.MusicControlActivity
 import com.luwliette.ztmelody_02.MusicControlActivity_SCN
 import com.luwliette.ztmelody_02.MusicService
 import com.luwliette.ztmelody_02.R
@@ -28,7 +27,6 @@ class DashboardFragment : Fragment() {
     private lateinit var recyclerView3: RecyclerView
 
     private var _binding: FragmentArtistBinding? = null
-
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -45,8 +43,9 @@ class DashboardFragment : Fragment() {
             insets
         }
 
+        // Inicializar RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.HORIZONTAL, false)
 
         recyclerView2 = view.findViewById(R.id.recyclerView2)
         recyclerView2.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.HORIZONTAL, false)
@@ -54,16 +53,11 @@ class DashboardFragment : Fragment() {
         recyclerView3 = view.findViewById(R.id.recyclerView3)
         recyclerView3.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
 
-
-        // Inicialización de RecyclerView
-        recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
         // Obtener canciones aleatorias de la base de datos
         val songMixedDatabase = SongDatabase(requireContext())
-        val randomSongList = songMixedDatabase.getRandomSongs(30) // Por ejemplo, obtener 10 canciones aleatorias
+        val randomSongList = songMixedDatabase.getRandomSongs(30) // Ejemplo: obtener 30 canciones aleatorias
 
-        // Crear la lista de modelos de canción aleatoria
+        // Crear la lista de modelos de canciones aleatorias
         val randomMusicList = ArrayList<SongModelActivity>()
         randomSongList.forEach { song ->
             randomMusicList.add(SongModelActivity(song.title, R.drawable.icon_normal))
@@ -72,6 +66,7 @@ class DashboardFragment : Fragment() {
         // Asignar adaptador al RecyclerView con las canciones aleatorias
         recyclerView.adapter = SongAdapterClass_3(randomMusicList, ::playSong, ::openSongDetailsActivity)
 
+        // Obtener todas las canciones de la base de datos
         val songDatabase = SongDatabase(requireContext())
         val songList = songDatabase.getAllSongs()
         val songPaths = songList.map { it.data }
@@ -83,7 +78,7 @@ class DashboardFragment : Fragment() {
 
         recyclerView2.adapter = SongAdapterClass_3(MusicList, ::playSong, ::openSongDetailsActivity)
 
-        // Filtrar canciones agregadas en los últimos 12 días para recyclerView3
+        // Filtrar canciones agregadas en los últimos 30 días para recyclerView3
         val recentSongList = songDatabase.getRecentSongs(30)
         val recentMusicList = ArrayList<SongModelActivity>()
 

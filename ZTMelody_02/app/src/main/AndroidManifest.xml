@@ -20,7 +20,8 @@
         tools:targetApi="31">
         <activity
             android:name=".MusicControlActivity_SCN"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FavoriteSongsActivity"
             android:exported="false" /> <!-- SplashActivity as the launcher activity -->
@@ -35,7 +36,8 @@
         </activity> <!-- Other activities -->
         <activity
             android:name=".ui.pruebas.GoogleActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.pruebas.PruevasActivity"
             android:exported="false" />
