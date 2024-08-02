@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luwliette.ztmelody_02.MusicControlActivity
+import com.luwliette.ztmelody_02.MusicControlActivity_SCN
 import com.luwliette.ztmelody_02.MusicService
 import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.SongAdapterClass_3
@@ -114,7 +115,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun openSongDetailsActivity() {
-        val intent = Intent(requireContext(), MusicControlActivity::class.java)
+        val intent = Intent(requireContext(), MusicControlActivity_SCN::class.java)
         startActivity(intent)
     }
 }

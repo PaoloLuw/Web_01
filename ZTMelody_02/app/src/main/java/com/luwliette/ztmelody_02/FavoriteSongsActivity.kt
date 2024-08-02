@@ -11,7 +11,6 @@ import com.luwliette.ztmelody_02.database.FavoriteSong
 import com.luwliette.ztmelody_02.databinding.ActivityFavoriteSongsBinding
 import com.luwliette.ztmelody_02.database.FavoriteSongsDatabase
 
-
 class FavoriteSongsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoriteSongsBinding
     private val songViewModel: SongViewModel by viewModels()
@@ -26,23 +25,41 @@ class FavoriteSongsActivity : AppCompatActivity() {
         binding = ActivityFavoriteSongsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ViewModel setup
+        // RecyclerView setup
+        adapter = SongAdapterClass_3(arrayListOf(), ::playSong, ::openSongDetailsActivity)
+        binding.favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.favoriteSongsRecyclerView.adapter = adapter
+
+        // ViewModel setup (optional, if you're using it to observe data)
+        // songViewModel.songList.observe(this, Observer { songs ->
+        //     adapter.updateSongs(songs)
+        // })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateFavoriteSongs()
+    }
+
+    private fun updateFavoriteSongs() {
         val favoriteSongDatabase = FavoriteSongsDatabase(this)
         favoriteSongList = favoriteSongDatabase.getAllFavoriteSongs()
         val songPaths = favoriteSongList.map { it.data }
         val musicList = ArrayList<SongModelActivity>()
 
-        // RecyclerView setup
-        adapter = SongAdapterClass_3(musicList, ::playSong, ::openSongDetailsActivity)
-        binding.favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.favoriteSongsRecyclerView.adapter = adapter
-
-        favoriteSongList.forEach { song ->
-            musicList.add(SongModelActivity(song.title, R.drawable.icon_normal))
+        // Verificar si la lista de canciones favoritas está vacía o no
+        if (favoriteSongList.isEmpty()) {
+            Log.e("FavoriteSongsActivity", "No favorite songs found!")
+        } else {
+            favoriteSongList.forEach { song ->
+                Log.d("FavoriteSongsActivity", "Favorite song: ${song.title}, Path: ${song.data}")
+                musicList.add(SongModelActivity(song.title, R.drawable.icon_normal))
+            }
         }
-        adapter.updateSongs(musicList)
 
-        songViewModel.setSongList(musicList)
+        // Actualizar el adaptador con la nueva lista de canciones
+        adapter.updateSongs(musicList)
+        songViewModel.setSongList(musicList) // Actualizar el ViewModel si es necesario
     }
 
     private fun getOriginalIndex(filteredSong: SongModelActivity): Int {
@@ -69,6 +86,7 @@ class FavoriteSongsActivity : AppCompatActivity() {
         val intent = Intent(this, MusicControlActivity_SCN::class.java)
         startActivity(intent)
     }
+
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/principalBackground" android:state_pressed="true" /> <!-- Color de fondo cuando se presiona -->
+    <item android:drawable="@color/principalBackground" /> <!-- Color de fondo cuando no se presiona -->
+</selector>

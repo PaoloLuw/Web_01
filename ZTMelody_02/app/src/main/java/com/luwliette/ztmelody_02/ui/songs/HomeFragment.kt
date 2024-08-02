@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.luwliette.ztmelody_02.SongAdapterActivity
 import com.luwliette.ztmelody_02.SongModelActivity
 import com.luwliette.ztmelody_02.MusicControlActivity
+import com.luwliette.ztmelody_02.MusicControlActivity_SCN
 import com.luwliette.ztmelody_02.MusicService
 import com.luwliette.ztmelody_02.R
 import com.luwliette.ztmelody_02.database.SongDatabase
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
         val songDatabase = SongDatabase(requireContext())
         val songList = songDatabase.getAllSongs()
         val songPaths = songList.map { it.data }
+        Log.d("MusicServiceImp", "Song found in database: $songPaths")
 
 
 
@@ -72,7 +74,7 @@ class HomeFragment : Fragment() {
 
     private fun openSongDetailsActivity() {
         //aqui que busque que se esta reproduciendo
-        val intent = Intent(requireContext(), MusicControlActivity::class.java)
+        val intent = Intent(requireContext(), MusicControlActivity_SCN::class.java)
         startActivity(intent)
     }
 }

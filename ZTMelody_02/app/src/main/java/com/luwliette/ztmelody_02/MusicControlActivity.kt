@@ -89,8 +89,23 @@ class MusicControlActivity : AppCompatActivity() {
         songDatabase = SongDatabase(this)
         favoriteSongsDatabase = FavoriteSongsDatabase(this)
 
-        updateSongName("Nombre de la canción")
+        // Simula una animación con un retraso si es necesario
+        // Puedes reemplazar este código con tu animación si la tienes
+        Handler(Looper.getMainLooper()).postDelayed({
+            // Obtén la canción actual y actualiza el botón de favoritos
+            val songTitle = songNameTextView.text.toString()
+            val song = songDatabase.getSongByTitle(songTitle)
+            song?.let {
+                currentSongId = it.id
+                currentSongTitle = it.title
+                currentSongArtist = it.artist
+                currentSongData = it.data
+                currentSongDateAdded = it.dateAdded
+                updateFavoriteButton(favoriteSongsDatabase.isFavorite(currentSongId))
+            }
+        }, 200) // Retraso en milisegundos para simular la animación
 
+        // Configura los botones
         playPauseButton.setOnClickListener {
             isPlaying = !isPlaying
             updatePlayPauseButton2()
@@ -105,7 +120,6 @@ class MusicControlActivity : AppCompatActivity() {
             val songTitle = songNameTextView.text.toString()
             Log.d("Problem of my comunication", "Add/Remove favorite button clicked. Song title: $songTitle")
 
-            // Obtener la canción por título
             val song = songDatabase.getSongByTitle(songTitle)
 
             if (song != null) {
@@ -122,7 +136,6 @@ class MusicControlActivity : AppCompatActivity() {
                     showToast("${song.title} added to favorites")
                 }
 
-                // Mostrar todos los favoritos actuales
                 val allFavorites = favoriteSongsDatabase.getAllFavoriteSongs()
                 Log.d("Favorites", "Current favorite songs:")
                 allFavorites.forEach { favorite ->
@@ -132,11 +145,6 @@ class MusicControlActivity : AppCompatActivity() {
                 Log.d("Error", "Song not found in the database")
             }
         }
-
-
-
-
-
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -162,6 +170,7 @@ class MusicControlActivity : AppCompatActivity() {
             }, 10) // Retraso de 200 ms entre los dos clics
         }, 10) // Retraso de 500 ms después de que la actividad se cargue
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

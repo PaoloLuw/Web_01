@@ -48,6 +48,15 @@ class MusicControlActivity_SCN : AppCompatActivity() {
     private var currentSongData: String = ""
     private var currentSongDateAdded: Long = 0
 
+    private val updateInterval: Long = 300 // Intervalo de actualización en milisegundos
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateRunnable = object : Runnable {
+        override fun run() {
+            updateSongInfo()
+            handler.postDelayed(this, updateInterval)
+        }
+    }
+
     // BroadcastReceiver para recibir actualizaciones del servicio de música
     private val musicReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -65,12 +74,13 @@ class MusicControlActivity_SCN : AppCompatActivity() {
                 }
 
                 songPath?.let { path ->
-                    updateSongName(extractSongNameFromPath(path)) // Llamada a extractSongNameFromPath
+                    val songName = extractSongNameFromPath(path)
+                    updateSongName(songName)
+                    Log.d("ProblemCommunication", "Received update: duration=$duration, currentPosition=$currentPosition, songName=$songName")
                 }
             }
         }
     }
-
 
 
     private val serviceConnection = object : ServiceConnection {
@@ -81,7 +91,16 @@ class MusicControlActivity_SCN : AppCompatActivity() {
 
             // Obtener el path de la canción actual y mostrar el nombre
             val currentSongPath = musicService?.getCurrentSongPath()
-            currentSongPath?.let { updateSongName(extractSongNameFromPath(it)) }
+            currentSongPath?.let {
+                updateSongName(extractSongNameFromPath(it))
+
+                // Verificar si la canción está en favoritos y actualizar el botón
+                val song = songDatabase.getSongByPath(it)
+                song?.let {
+                    currentSongId = song.id
+                    updateFavoriteButton(favoriteSongsDatabase.isFavorite(currentSongId))
+                }
+            }
             Log.d("CurrentSongPath", "The current song path is: $currentSongPath")
         }
 
@@ -118,58 +137,57 @@ class MusicControlActivity_SCN : AppCompatActivity() {
 
         nextButton.setOnClickListener {
             sendCommandToService(MusicService.ACTION_NEXT)
-            Handler(Looper.getMainLooper()).postDelayed({
-                val currentSongPath = musicService?.getCurrentSongPath()
-                currentSongPath?.let { path ->
-                    updateSongName(extractSongNameFromPath(path))
-                }
-            }, 200) // Retardo de 200 ms
         }
 
         prevButton.setOnClickListener {
             sendCommandToService(MusicService.ACTION_PREV)
-            Handler(Looper.getMainLooper()).postDelayed({
-                val currentSongPath = musicService?.getCurrentSongPath()
-                currentSongPath?.let { path ->
-                    updateSongName(extractSongNameFromPath(path))
-                }
-            }, 200) // Retardo de 200 ms
         }
 
         forwardButton.setOnClickListener { sendCommandToService(MusicService.ACTION_FORWARD) }
         rewindButton.setOnClickListener { sendCommandToService(MusicService.ACTION_REWIND) }
 
         addFavoriteButton.setOnClickListener {
+            // Obtener el camino completo de la canción actual desde el servicio
+            val currentSongPath = musicService?.getCurrentSongPath()
+            Log.d("MusicControlActivity_SCND", "Current song path: $currentSongPath")
 
-            val songTitle = songNameTextView.text.toString()
+            if (currentSongPath != null) {
+                // Obtener la canción desde la base de datos usando el path completo
+                val song = songDatabase.getSongByPath(currentSongPath)
+                Log.d("MusicControlActivity_SCND", "Song fetched from database: $song")
 
-            // Obtener la canción por título
-            val song = songDatabase.getSongByTitle(songTitle)
-            Log.d("Problem of my communication", "Add/Remove favorite button clicked. Song title: $song")
-            if (song != null) {
-                if (favoriteSongsDatabase.isFavorite(song.id)) {
-                    favoriteSongsDatabase.removeFavoriteSong(song.id)
-                    updateFavoriteButton(false)
-                    Log.d("FavoritesPrint", "Removed from favorites: ${song.title} by ${song.artist}")
-                    showToast("${song.title} removed from favorites")
+                if (song != null) {
+                    if (favoriteSongsDatabase.isFavorite(song.id)) {
+                        Log.d("MusicControlActivity_SCND", "Song is already in favorites, removing it.")
+                        favoriteSongsDatabase.removeFavoriteSong(song.id)
+                        updateFavoriteButton(false)
+                        showToast("${song.title} removed from favorites")
+                        Log.d("MusicControlActivity_SCND", "Removed from favorites: ${song.title}")
+                    } else {
+                        Log.d("MusicControlActivity_SCND", "Song is not in favorites, adding it.")
+                        val favoriteSong = FavoriteSong(
+                            song.id, song.title, song.artist, currentSongPath, song.dateAdded
+                        )
+                        favoriteSongsDatabase.addFavoriteSong(favoriteSong)
+                        updateFavoriteButton(true)
+                        showToast("${song.title} added to favorites")
+                        Log.d("MusicControlActivity_SCND", "Added to favorites: ${song.title}")
+                    }
+                    // Imprimir toda la base de datos de canciones favoritas
+                    printAllFavoriteSongs()
                 } else {
-                    val favoriteSong = FavoriteSong(song.id, song.title, song.artist, song.data, song.dateAdded)
-                    favoriteSongsDatabase.addFavoriteSong(favoriteSong)
-                    updateFavoriteButton(true)
-                    Log.d("FavoritesPrint", "Added to favorites: ${song.title} by ${song.artist}")
-                    showToast("${song.title} added to favorites")
-                }
-
-                // Mostrar todos los favoritos actuales
-                val allFavorites = favoriteSongsDatabase.getAllFavoriteSongs()
-                Log.d("Favorites", "Current favorite songs:")
-                allFavorites.forEach { favorite ->
-                    Log.d("FavoritesPrint", "Title: ${favorite.title}, Artist: ${favorite.artist}")
+                    showToast("Song not found in the database")
+                    Log.d("MusicControlActivity_SCND", "Song not found in the database for path: $currentSongPath")
                 }
             } else {
-                Log.d("Error", "Song not found in the database")
+                showToast("Current song path not available")
+                Log.d("MusicControlActivity_SCND", "Current song path not available")
             }
         }
+
+
+
+
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -197,9 +215,17 @@ class MusicControlActivity_SCN : AppCompatActivity() {
         }, 10)
     }
 
+    private fun printAllFavoriteSongs() {
+        val favoriteSongs = favoriteSongsDatabase.getAllFavoriteSongs()
+        Log.d("FavoriteSongsDatabase", "All favorite songs:")
+        for (favoriteSong in favoriteSongs) {
+            Log.d("FavoriteSongsDatabase", "ID: ${favoriteSong.id}, Title: ${favoriteSong.title}, Artist: ${favoriteSong.artist}, Data: ${favoriteSong.data}, Date Added: ${favoriteSong.dateAdded}")
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(musicReceiver)
+        handler.removeCallbacks(updateRunnable)
     }
 
     override fun onStart() {
@@ -207,6 +233,7 @@ class MusicControlActivity_SCN : AppCompatActivity() {
         Intent(this, MusicService::class.java).also { intent ->
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
+        handler.post(updateRunnable)
     }
 
     override fun onStop() {
@@ -215,6 +242,7 @@ class MusicControlActivity_SCN : AppCompatActivity() {
             unbindService(serviceConnection)
             isBound = false
         }
+        handler.removeCallbacks(updateRunnable)
     }
 
     private fun sendCommandToService(action: String) {
@@ -236,22 +264,15 @@ class MusicControlActivity_SCN : AppCompatActivity() {
         songNameTextView.text = name
     }
 
-    private fun updateSongDetails(songName: String) {
-        songNameTextView.text = songName
-        // Aquí, extrae la información de la canción desde la base de datos
-        val song = songDatabase.getSongById(currentSongId)
-        song?.let {
-            currentSongId = it.id
-            currentSongTitle = it.title
-            currentSongArtist = it.artist
-            currentSongData = it.data
-            currentSongDateAdded = it.dateAdded
-            updateFavoriteButton(favoriteSongsDatabase.isFavorite(currentSongId))
+    private fun updateSongInfo() {
+        val songPath = musicService?.getCurrentSongPath()
+        songPath?.let { path ->
+            updateSongName(extractSongNameFromPath(path))
         }
     }
 
     private fun updateFavoriteButton(isFavorite: Boolean) {
-        val drawable = if (isFavorite) R.drawable.ic_nothing else R.drawable.ic_nothing
+        val drawable = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_nofavorite
         addFavoriteButton.setBackgroundResource(drawable)
     }
 
@@ -264,14 +285,13 @@ class MusicControlActivity_SCN : AppCompatActivity() {
         playPauseButton.performClick()
     }
 
-    // Función para mostrar un Toast
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    // Función para extraer el nombre de la canción desde el path
     private fun extractSongNameFromPath(path: String): String {
-        return path.substringAfterLast("/")
+        val fileName = path.substringAfterLast("/")
+        return fileName.substringBeforeLast(".")
     }
 
     private fun formatDurationCustom(duration: Int): String {
@@ -279,5 +299,4 @@ class MusicControlActivity_SCN : AppCompatActivity() {
         val seconds = duration / 1000 % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
-
 }

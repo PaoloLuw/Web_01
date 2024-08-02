@@ -8,12 +8,13 @@ import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import com.luwliette.ztmelody_02.database.SongDatabase
+import java.io.File
 
 class MusicService : Service() {
 
     private val binder = MusicBinder()
-    private var musicService: MusicService? = null
     private var isBound = false
+    private var currentSongPath: String? = null // Variable para guardar el path de la canción actual
 
     inner class MusicBinder : Binder() {
         fun getService(): MusicService = this@MusicService
@@ -22,6 +23,7 @@ class MusicService : Service() {
     override fun onBind(intent: Intent?): IBinder {
         return binder
     }
+
     companion object {
         const val ACTION_PLAY_PAUSE = "com.luwliette.ztmelody_02.PLAY_PAUSE"
         const val ACTION_NEXT = "com.luwliette.ztmelody_02.NEXT"
@@ -34,13 +36,11 @@ class MusicService : Service() {
         const val EXTRA_DURATION = "duration"
         const val EXTRA_CURRENT_POSITION = "current_position"
 
-        const val EXTRA_SONG_NAME = "song_name" // Nueva constante para el nombre de la canción
-        const val EXTRA_SONG_ID = "com.luwliette.ztmelody_02.EXTRA_SONG_ID" // Nueva constante para el ID de la canción
-        const val ACTION_PLAY_RANDOM = "com.luwliette.ztmelody_02.ACTION_PLAY_RANDOM" // Nueva constante para reproducción aleatoria
+        const val EXTRA_SONG_NAME = "song_name"
+        const val EXTRA_SONG_ID = "com.luwliette.ztmelody_02.EXTRA_SONG_ID"
+        const val ACTION_PLAY_RANDOM = "com.luwliette.ztmelody_02.ACTION_PLAY_RANDOM"
         const val EXTRA_SONG_PATH = "com.luwliette.ztmelody_02.EXTRA_SONG_PATH"
         const val ACTION_PLAY = "com.luwliette.ztmelody_02.action.PLAY"
-
-
     }
 
     private var mediaPlayer: MediaPlayer? = null
@@ -84,7 +84,6 @@ class MusicService : Service() {
         return START_STICKY
     }
 
-
     override fun onDestroy() {
         handler.removeCallbacks(updateSeekBarTask)
         mediaPlayer?.release()
@@ -104,6 +103,7 @@ class MusicService : Service() {
                     playNextSong()
                 }
             }
+            currentSongPath = songPath // Guardar el path de la canción actual
             handler.post(updateSeekBarTask)
             updateUI()
         } catch (e: Exception) {
@@ -154,10 +154,12 @@ class MusicService : Service() {
                 putExtra(EXTRA_CURRENT_POSITION, it.currentPosition)
                 putExtra(EXTRA_DURATION, it.duration)
                 putExtra(EXTRA_SONG_NAME, getSongName()) // Agregar el nombre de la canción aquí
+                putExtra(EXTRA_SONG_PATH, currentSongPath) // Agregar el path de la canción actual
             }
         }
         sendBroadcast(intent)
     }
+
     private fun getSongName(): String? {
         val songDatabase = SongDatabase(this)
         val allSongs = songDatabase.getAllSongs()
@@ -178,11 +180,8 @@ class MusicService : Service() {
     }
 
     fun getCurrentSongPath(): String? {
-        return if (currentSongIndex >= 0 && currentSongIndex < songList.size) {
-            songList[currentSongIndex]
-        } else {
-            null
-        }
-    }
+        Log.d("MusicServiceImp", "getCurrentSongPath - final path: $currentSongPath")
 
+        return currentSongPath
+    }
 }

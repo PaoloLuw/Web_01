@@ -222,5 +222,23 @@ class SongDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
         return song
     }
+    fun getSongByPath(path: String): Song? {
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_SONGS WHERE $COLUMN_DATA = ?"
+        val cursor: Cursor = db.rawQuery(selectQuery, arrayOf(path))
+
+        var song: Song? = null
+        if (cursor.moveToFirst()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
+            val artist = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTIST))
+            val data = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATA))
+            val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_DATE_ADDED))
+            song = Song(id, title, artist, data, dateAdded)
+        }
+        cursor.close()
+        db.close()
+        return song
+    }
 
 }
